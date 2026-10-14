@@ -1,3 +1,4 @@
+
 steps:
   - label: ":python: Generate sentence"
     key: "sentence"
@@ -12,6 +13,7 @@ steps:
     plugins:
       - docker#v5.14.0:
           image: "python:3.13"
+          propagate-uid-gid: true
           mount-buildkite-agent: true
 
   - label: ":memo: Generate paragraph"
@@ -29,3 +31,4 @@ steps:
       - docker#v5.14.0:
           image: "python:3.13"
           mount-buildkite-agent: true
+          propagate-uid-gid: true
