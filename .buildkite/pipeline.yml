@@ -1,0 +1,31 @@
+steps:
+  - label: ":python: Generate sentence"
+    key: "sentence"
+    agents:
+      queue: "local"
+    command: |
+      set -eu
+      pip install --no-cache-dir .
+      python -c 'import loremipsum; print(loremipsum.sentence(max_char=20))' > result.txt
+      cat result.txt
+      buildkite-agent annotate "$(cat result.txt)" --context sentence --style success
+    plugins:
+      - docker#v5.14.0:
+          image: "python:3.13"
+          mount-buildkite-agent: true
+
+  - label: ":memo: Generate paragraph"
+    key: "paragraph"
+    depends_on: "sentence"
+    agents:
+      queue: "local"
+    command: |
+      set -eu
+      pip install --no-cache-dir .
+      python -c 'import loremipsum; print(loremipsum.paragraph(max_char=100))' > result2.txt
+      cat result2.txt
+      buildkite-agent annotate "$(cat result2.txt)" --context paragraph --style info
+    plugins:
+      - docker#v5.14.0:
+          image: "python:3.13"
+          mount-buildkite-agent: true
